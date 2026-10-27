@@ -1,0 +1,2567 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一步一步｜指數與對數化簡實驗室 · 優化版</title>
+<meta name="description" content="離線可用的指數與對數練習：22 題、分步操作、進度續作與紀錄備份。">
+<style>
+:root{
+  --ink:#203c41;--muted:#5c7175;--teal:#166b5c;
+  --mint:#e6f3ed;--paper:#f6f5f0;--line:#d9e1dc;
+  --orange:#a24a2f;--white:#fff;--soft:#fff2e9
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:16px/1.65 system-ui,-apple-system,
+  "Microsoft JhengHei","PingFang TC",sans-serif
+}
+button,input,select,textarea{font:inherit}
+button,select{cursor:pointer}
+button{
+  color:inherit;background:white;border:1px solid var(--line);
+  border-radius:10px;padding:10px 15px;min-height:44px
+}
+button:hover{border-color:var(--teal);background:#f0f7f3}
+button:disabled{cursor:default;opacity:.55}
+button:focus-visible,input:focus-visible,
+select:focus-visible,summary:focus-visible,textarea:focus-visible,a:focus-visible{
+  outline:3px solid #cf793e;outline-offset:3px
+}
+button.primary{
+  background:var(--teal);color:white;border-color:var(--teal)
+}
+button.primary:hover{background:#105245}
+.shell{max-width:1220px;margin:auto;padding:28px 28px 60px}
+.mast{
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--line);padding-bottom:18px;gap:15px
+}
+.brand{
+  display:flex;gap:12px;align-items:center;
+  font-weight:750;letter-spacing:.05em
+}
+.mark{
+  display:flex;align-items:center;justify-content:center;
+  background:var(--ink);color:#fff;border-radius:12px;
+  width:43px;height:43px;font:26px Georgia,serif
+}
+.mark sup{font-size:.5em;align-self:flex-start;margin-top:6px}
+.badge,.eyebrow{font-size:12px;letter-spacing:.08em}
+.badge{
+  background:var(--mint);color:var(--teal);
+  padding:5px 10px;border-radius:20px;white-space:nowrap
+}
+.intro{padding:18px 0 20px}
+.eyebrow{color:var(--teal);font-weight:750}
+.intro h1{
+  font-size:clamp(26px,3.5vw,40px);line-height:1.25;
+  letter-spacing:-.035em;margin:8px 0 12px
+}
+.intro p{margin:0;color:var(--muted)}
+.layout{
+  display:grid;grid-template-columns:225px minmax(0,1fr);
+  gap:24px;align-items:start
+}
+.rail{position:sticky;top:20px;min-width:0}
+.card{min-width:0}
+.rail h2{
+  font-size:12px;color:var(--muted);
+  letter-spacing:.1em;margin:0 0 14px
+}
+.units{display:grid;gap:8px}
+.unit{
+  text-align:left;display:grid;grid-template-columns:31px 1fr;
+  gap:9px;padding:12px;background:transparent;
+  border-color:transparent;border-radius:12px
+}
+.unit.active{background:var(--ink);color:white}
+.unit .num{font:20px Georgia,serif;opacity:.7}
+.unit strong{display:block;font-size:14px}
+.unit small{display:block;font-size:11px;opacity:.8}
+.progressbox{
+  border-top:1px solid var(--line);margin-top:22px;
+  padding-top:18px;font-size:13px;color:var(--muted)
+}
+progress{
+  width:100%;height:6px;accent-color:var(--teal);
+  border:0;display:block;margin:12px 0
+}
+#review{width:100%;margin:10px 0}
+.card{
+  background:white;border:1px solid var(--line);
+  border-radius:18px;overflow:hidden
+}
+.cardhead{padding:22px 26px 18px;border-bottom:1px solid var(--line)}
+.toprow{
+  display:flex;gap:12px;align-items:center;
+  justify-content:space-between;flex-wrap:wrap
+}
+h2{font-size:21px;margin:4px 0 12px;line-height:1.35}
+.modes{
+  display:flex;gap:4px;background:var(--paper);
+  padding:4px;border-radius:11px
+}
+.modes button{
+  border:0;min-height:36px;padding:6px 12px;
+  font-size:13px;background:transparent
+}
+.modes .active{
+  background:white;box-shadow:0 1px 5px #203c411a;
+  color:var(--teal);font-weight:750
+}
+.taskrow{display:flex;align-items:center;gap:12px;margin-top:15px}
+.taskrow label{font-size:12px;color:var(--muted);white-space:nowrap}
+select{
+  min-width:0;max-width:100%;background:white;
+  border:1px solid var(--line);border-radius:8px;
+  padding:9px;min-height:44px;color:var(--ink)
+}
+#tasks{flex:1;font-size:13px}
+.workspace{padding:22px 26px}
+.tiny{font-size:12px;color:var(--muted)}
+.problem{
+  padding:17px 20px;background:var(--paper);
+  border-radius:12px;margin:9px 0 19px
+}
+.math{
+  font-family:Georgia,"Times New Roman","Microsoft JhengHei",serif;
+  font-size:clamp(21px,2.5vw,27px);
+  line-height:2.4;overflow-x:auto;padding:6px 2px
+}
+.problem .math{padding-top:2px}
+.math sup,.math sub{font-size:.66em;line-height:0}
+.math sup{display:inline-block;vertical-align:super;line-height:1.2}
+.math sup .frac{vertical-align:baseline}
+.math sub{vertical-align:sub}
+.pow{
+  display:inline-flex;align-items:flex-end;
+  vertical-align:baseline;line-height:1.2;white-space:nowrap
+}
+.math .pow>sup{
+  display:block;line-height:1.2;margin:0 0 .85em .04em;
+  vertical-align:initial
+}
+.pow>span{display:block}
+.frac{
+  display:inline-flex;flex-direction:column;vertical-align:middle;
+  align-items:stretch;text-align:center;line-height:1.35;
+  margin:0 .14em;font-size:.93em
+}
+.frac>span{padding:1px .17em}
+.frac>span:first-child{border-bottom:1px solid currentColor}
+.root{white-space:nowrap}
+.radicand{border-top:1px solid currentColor;padding:0 .12em}
+.root>sup{
+  font-size:.5em;position:relative;top:-.4em;margin-right:-.05em
+}
+.problem .condition{color:var(--muted);font-size:12px;line-height:1.6}
+.stepbar{
+  display:flex;gap:8px;align-items:center;
+  justify-content:space-between;margin-bottom:14px
+}
+.dots{display:flex;gap:5px}
+.dot{height:5px;width:22px;background:var(--line);border-radius:9px}
+.dot.done{background:var(--teal)}
+.dot.now{background:#bd784c}
+.stepname{font-size:17px;margin:0 0 8px}
+.cue{font-size:13px;color:var(--muted);margin:0 0 12px}
+.law{
+  border-left:3px solid var(--teal);background:#f2f8f4;
+  padding:10px 14px;margin:12px 0
+}
+.law .math{font-size:19px;line-height:1.8}
+.law p{font-size:13px;margin:5px 0}
+.board{
+  border:1px dashed #9db5ac;border-radius:12px;
+  padding:20px 12px;text-align:center;margin:14px 0;
+  background:#fcfdfb;min-height:105px
+}
+.board .math{font-size:25px;line-height:2.7}
+.slot{
+  font:17px/1.1 system-ui,sans-serif;color:var(--teal);
+  border:2px dashed #91ada1;border-radius:8px;
+  min-width:52px;min-height:46px;padding:8px;margin:3px;
+  vertical-align:middle;background:white
+}
+.slot.filled{border-style:solid;background:var(--mint)}
+.slot.over{outline:3px solid #ce783d;background:#fff2e9}
+.bank{
+  display:flex;gap:9px;flex-wrap:wrap;align-items:center;
+  margin:10px 0 15px
+}
+.tile{
+  touch-action:none;user-select:none;
+  font-family:Georgia,"Microsoft JhengHei",serif;
+  font-size:20px;border:1px solid #b9cac2;
+  border-bottom-width:3px;min-width:54px;min-height:48px
+}
+.tile.selected,.factor.selected{
+  outline:3px solid #ce783d;background:#fff2e9
+}
+.ghost{
+  position:fixed;z-index:50;pointer-events:none;opacity:.88;
+  background:#e5f3eb;transform:translate(-50%,-50%);
+  margin:0;box-shadow:0 5px 25px #203c4129
+}
+.factor{
+  font:inherit;padding:4px 9px;touch-action:none;
+  margin:2px;min-width:40px
+}
+.factor.cancelled{
+  text-decoration:line-through;text-decoration-color:#a24a2f;
+  text-decoration-thickness:3px;opacity:.7;background:#f7eee7
+}
+.actions{
+  display:flex;align-items:center;gap:9px;
+  flex-wrap:wrap;margin-top:17px
+}
+.feedback{
+  margin-top:15px;padding:12px 14px;border-radius:10px;
+  font-size:14px;background:var(--paper)
+}
+.feedback:empty{display:none}
+.feedback.good{background:var(--mint);color:#175044}
+.feedback.bad{background:var(--soft);color:#873c24}
+.rulepicker{
+  font-size:13px;display:flex;gap:10px;
+  align-items:center;flex-wrap:wrap
+}
+.rulepicker select{flex:1}
+.finalinputs{display:flex;gap:15px;flex-wrap:wrap;margin:18px 0}
+.field{flex:1;min-width:130px}
+.field label{
+  display:block;font-size:13px;color:var(--muted);margin-bottom:7px
+}
+.field input{
+  width:100%;min-height:50px;border:1px solid #93aca2;
+  border-radius:8px;padding:10px 12px;background:#fcfdfb;
+  font:22px Georgia,serif;color:var(--ink)
+}
+.history{border-top:1px solid var(--line);padding:18px 26px}
+.history summary{cursor:pointer;font-size:13px;font-weight:650}
+.trace{
+  border-left:2px solid var(--line);
+  margin:14px 0 0 7px;padding-left:18px
+}
+.traceitem{margin:0 0 14px}
+.traceitem .math{font-size:20px;line-height:2}
+.complete{text-align:center;padding:12px 0}
+.checkmark{
+  font:30px Georgia,serif;border:1px solid #bbd7c9;
+  background:var(--mint);border-radius:50%;
+  width:56px;height:56px;display:grid;place-items:center;
+  margin:0 auto 16px
+}
+.complete h3{font-size:25px;margin:8px 0}
+.complete p{color:var(--muted);font-size:14px}
+.complete .actions{justify-content:center}
+.reflection{
+  width:100%;min-height:76px;border:1px solid var(--line);
+  border-radius:10px;padding:12px;resize:vertical;margin-top:8px
+}
+.notes{
+  margin-top:26px;padding:20px 24px;background:#eeeee7;
+  border-radius:14px;font-size:14px
+}
+.notes summary{cursor:pointer;font-weight:700}
+.notes p{max-width:80ch}
+.notes a{color:var(--teal)}
+.notes table{width:100%;border-collapse:collapse;font-size:13px}
+.notes td,.notes th{
+  text-align:left;border-bottom:1px solid #cdd7ce;
+  padding:9px 6px;vertical-align:top
+}
+.footer{margin-top:18px;color:var(--muted);font-size:11px}
+#bootError{padding:24px;background:#fff2e9}
+.sr{
+  position:absolute;width:1px;height:1px;
+  overflow:hidden;clip-path:inset(50%)
+}
+[hidden]{display:none!important}
+@media(max-width:760px){
+  .shell{padding:16px 14px 35px}
+  .mast{padding-bottom:12px}
+  .brand{font-size:13px}
+  .intro{padding:20px 0}
+  .intro p{font-size:13px}
+  .layout{grid-template-columns:minmax(0,1fr);gap:14px}
+  .rail{position:static}
+  .rail h2{display:none}
+  .units{display:flex;overflow-x:auto;padding:2px 0 7px;gap:5px}
+  .unit{
+    min-width:141px;padding:10px;grid-template-columns:24px 1fr
+  }
+  .unit strong{font-size:13px}
+  .unit .num{font-size:17px}
+  .progressbox{
+    margin-top:4px;padding-top:10px;display:flex;
+    align-items:center;gap:10px;flex-wrap:wrap
+  }
+  .progressbox progress{width:90px;margin:0}
+  .progressbox #review{
+    width:auto;margin:0;padding:5px 10px;
+    min-height:36px;font-size:12px
+  }
+  .progressbox #storage{width:100%;font-size:11px}
+  .cardhead,.workspace{padding:18px 16px}
+  .cardhead h2{font-size:20px}
+  .modes{width:100%}
+  .modes button{flex:1;padding:6px}
+  .board{padding:14px 6px}
+  .board .math{font-size:22px}
+  .slot{min-width:46px;font-size:16px;padding:6px}
+  .problem{padding:12px}
+  .history{padding:16px}
+  .notes{padding:16px}
+  .badge{font-size:10px}
+  .math{font-size:23px}
+  .actions button{flex-grow:1}
+}
+@media(prefers-reduced-motion:no-preference){
+  .slot.filled{animation:settle .18s ease-out}
+  @keyframes settle{
+    from{transform:scale(.95)}to{transform:scale(1)}
+  }
+}
+.skip-link{position:absolute;left:16px;top:-100px;z-index:100;
+  padding:10px 16px;border-radius:8px;background:var(--ink);color:#fff}
+.skip-link:focus{top:12px}
+.session-notice{padding:10px 14px;margin:0 0 16px;border-radius:10px;
+  background:var(--mint);font-size:13px;color:var(--teal)}
+.session-notice:empty{display:none}
+.backup-panel{margin-top:20px;padding-top:16px;border-top:1px solid #cdd7ce}
+.backup-panel h3{font-size:16px;margin:0 0 8px}
+.backup-panel .actions{margin-top:10px}
+.import-preview{margin:12px 0;padding:14px;border:1px solid var(--teal);
+  border-radius:10px;background:#fff}
+.field input[aria-invalid="true"]{border:2px solid var(--orange)}
+#work{scroll-margin-top:18px}
+.stepname:focus,.complete h3:focus{outline:2px solid var(--teal);outline-offset:5px}
+.math:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+@media(max-width:420px){.mast{align-items:flex-start}.brand{letter-spacing:0;gap:8px}
+  .badge{white-space:normal;text-align:center;max-width:92px}.field{min-width:0;flex-basis:100%}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#work">跳到練習區</a>
+<div class="shell">
+  <header class="mast">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">a<sup>n</sup></span>
+      一步一步 / STEP LAB
+    </div>
+    <span class="badge">離線可用 · 自動續作</span>
+  </header>
+
+  <section class="intro">
+    <div class="eyebrow">高中數學 · 指數與對數</div>
+    <h1>把每一步，做明白。</h1>
+    <p>看清結構，移動符號，再檢查等式。一次只處理一個變化。</p>
+  </section>
+
+  <noscript>
+    <p id="bootError">
+      此練習需要 JavaScript。請將完整原始碼存成 UTF-8 的 .html 檔，
+      使用允許 JavaScript 的 Chrome、Edge、Safari 或 Firefox 開啟。
+    </p>
+  </noscript>
+
+  <div id="bootMessage" class="tiny">
+    正在啟動練習；若此訊息持續顯示，請用瀏覽器開啟完整 HTML 檔。
+  </div>
+
+  <div id="sessionNotice" class="session-notice" role="status" aria-live="polite"></div>
+
+  <div id="app" class="layout" hidden>
+    <aside class="rail">
+      <h2>學習路徑 / 6 個階段</h2>
+      <nav class="units" id="units" aria-label="學習階段"></nav>
+      <div class="progressbox">
+        <span id="progressText"></span>
+        <progress id="progress" max="100" value="0"
+          aria-label="完成進度"></progress>
+        <button id="review">回練錯題</button>
+        <span id="storage" class="tiny"></span>
+      </div>
+    </aside>
+
+    <main class="card">
+      <header class="cardhead">
+        <div class="eyebrow" id="unitMeta"></div>
+        <div class="toprow">
+          <h2 id="unitTitle"></h2>
+          <div class="modes" role="group" aria-label="提示程度">
+            <button data-mode="guide">① 跟著做</button>
+            <button data-mode="practice">② 自己做</button>
+            <button data-mode="test">③ 獨立檢核</button>
+          </div>
+        </div>
+        <div class="taskrow">
+          <label for="tasks">練習題</label>
+          <select id="tasks"></select>
+        </div>
+      </header>
+
+      <section class="workspace" id="work" tabindex="-1" aria-label="練習操作區"></section>
+
+      <details class="history" id="history">
+        <summary>
+          我的化簡軌跡 <span id="traceCount"></span>
+        </summary>
+        <div id="trace" class="trace"></div>
+      </details>
+    </main>
+  </div>
+
+  <details class="notes">
+    <summary>教師筆記 · 設計依據與使用方法</summary>
+
+    <p>
+      <b>建議節奏：</b>
+      先跟做一題，把動作與規則一起說出來；再選「自己做」，
+      判斷法則後完成變形；最後換一題做「獨立檢核」。
+      隔一段時間回到錯題，並在紙上完整寫一次。
+      每題均可自由切換模式；切換會重做當題。
+    </p>
+
+    <table>
+      <thead>
+        <tr><th>設計</th><th>在介面中的實現</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>有意義的具身動作</td>
+          <td>
+            把根指數放到分母、合併同底數的指數、
+            交換指數與真數的位置、配對約去相同因子。
+            拖曳與「先點卡片、再點空格」等效；
+            鍵盤可用 Tab 與 Enter 操作。
+          </td>
+        </tr>
+        <tr>
+          <td>控制認知負荷</td>
+          <td>
+            由單一規則到混合式；每屏只做一步；
+            規則緊鄰式子；已完成步驟收在軌跡中。
+            跟做提供公式，自己做先選法則，
+            獨立檢核只保留原題。
+          </td>
+        </tr>
+        <tr>
+          <td>促進程序熟練</td>
+          <td>
+            同題重練、跨題應用、錯題回練與延後再測。
+            只有未看提示、當次未答錯的獨立檢核
+            記為「獨立過關」；跟做完成不代表已掌握。
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      「肌肉記憶」在此指動作與解題程序的熟練化；
+      學習目標仍是能說明法則、辨認適用條件，
+      並能離開介面自行化簡。
+      本介面依研究原則設計，未對本介面的學習成效作實驗驗證。
+    </p>
+
+    <p>
+      <b>對應講義：</b>
+      題型 1「根式與分數指數冪互化」、
+      題型 2「指數冪化簡求值」、
+      題型 5「指對互化」、
+      題型 6「對數運算」、
+      題型 7「換底」。
+      包含原題、拆步題及同型改編；不涵蓋函數圖像與不等式。
+      講義題型 5 第 4 題解析的
+      (1/2)<sup>−3</sup> 已校正為 8。
+    </p>
+
+    <p>
+      <b>研究參考：</b>
+      <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2265003/"
+         target="_blank" rel="noopener noreferrer">
+        Cook 等（2008），Gesturing makes learning last
+      </a>；
+      <a href="https://doi.org/10.1207/s15516709cog1202_4"
+         target="_blank" rel="noopener noreferrer">
+        Sweller（1988），Cognitive Load During Problem Solving
+      </a>。
+      上述動作與提示安排是對研究原則的教學設計應用。
+    </p>
+
+    <p>
+      <b>操作：</b>
+      卡片可重複使用，也可以直接點選。
+      分數用 3/4、負數用 -2，小數也可；
+      字母式可使用括號、乘號與交換順序，例如 a+2b、a+b*2、(a+2b)。
+      分數請保留精確值；小數需與答案完全相等。答案欄不接受上標或冪次符號。
+      當題步驟、已填答案及提示／答錯次數會自動保留；反思文字不儲存。
+      瀏覽器拒絕儲存時仍可練習與匯出備份。
+    </p>
+
+    <section class="backup-panel" aria-labelledby="backupTitle">
+      <h3 id="backupTitle">學習紀錄備份</h3>
+      <p class="tiny">更換裝置或移動 HTML 檔案前，先匯出紀錄；之後可匯入並接續。
+        直接開啟本機 HTML 時，不同瀏覽器的儲存方式可能不同。備份只包含本頁練習紀錄。</p>
+      <div class="actions">
+        <button id="exportProgress">匯出學習紀錄</button>
+        <button id="importProgress">匯入學習紀錄</button>
+        <input id="importFile" type="file" accept=".json,application/json" hidden>
+      </div>
+      <p id="backupStatus" class="tiny" role="status" aria-live="polite"></p>
+      <div id="importPreview" class="import-preview" hidden>
+        <p id="importSummary"></p>
+        <p class="tiny">匯入會取代目前紀錄與當題進度；如需保留現有紀錄，請先匯出。</p>
+        <div class="actions"><button id="confirmImport" class="primary">取代紀錄並匯入</button>
+          <button id="cancelImport">取消</button></div>
+      </div>
+    </section>
+    <button id="reset">清除本機學習紀錄</button>
+    <span id="resetNote" class="tiny" role="status" aria-live="polite"></span>
+  </details>
+
+  <footer class="footer">
+    零外部程式庫 · 不需登入 · 無計時競賽 · 手機與電腦皆可操作
+  </footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* 純 HTML/CSS/JS；無 CDN、fetch、模組匯入或 eval。 */
+
+/* ---------- 數學排版 ---------- */
+
+const P=(a,b)=>
+  '<span class="pow"><span>'+a+'</span><sup>'+b+'</sup></span>';
+
+const F=(a,b)=>
+  '<span class="frac"><span>'+a+'</span><span>'+b+'</span></span>';
+
+const R=(a,n=2)=>
+  '<span class="root">'+
+  (n===2?'':'<sup>'+n+'</sup>')+
+  '√<span class="radicand">'+a+'</span></span>';
+
+const L=(a,b)=>'<span class="log">log<sub>'+a+'</sub>(<span class="logarg">'+b+'</span>)</span>';
+
+/* ---------- 法則、動作及錯因 ---------- */
+
+const rules={
+  root:{
+    name:'根式轉分數指數',
+    formula:R(P('a','m'),'n')+' = '+P('a','m/n'),
+    tip:'a > 0，n 為大於 1 的整數。根指數在分母，原來的冪在分子。',
+    cue:'手指沿根號指向指數分母，再把原冪放到分子。',
+    trap:'根號的次數要放在分母；注意本題字母為正。一般的 √(x²) 是 |x|。'
+  },
+  product:{
+    name:'同底數冪相乘',
+    formula:P('a','m')+' × '+P('a','n')+' = '+P('a','m+n'),
+    tip:'本課取 a > 0。同底數且相乘，才把指數相加。',
+    cue:'把兩個指數向中間合攏；底數留在原位。',
+    trap:'相乘才把指數相加；aᵐ + aⁿ 不能套用這個法則。'
+  },
+  quotient:{
+    name:'同底數冪相除',
+    formula:P('a','m')+' ÷ '+P('a','n')+' = '+P('a','m−n'),
+    tip:'a > 0，分子指數減分母指數。',
+    cue:'先指分子，再指分母，依序放入減法兩端。',
+    trap:'順序是分子減分母，不能顛倒。'
+  },
+  power:{
+    name:'冪的乘方',
+    formula:P('('+P('a','m')+')','n')+' = '+P('a','m×n'),
+    tip:'本課取 a > 0。內外兩層指數相乘。',
+    cue:'把外層指數移到內層旁邊，以乘號連起來。',
+    trap:'冪的乘方是指數相乘，同底數冪相乘才是指數相加。'
+  },
+  reciprocal:{
+    name:'負指數取倒數',
+    formula:P('a','−r')+' = '+F('1',P('a','r')),
+    tip:'a > 0。負號改變倒數關係，不使數值變負。',
+    cue:'把底數上下翻轉，再讓指數變成正數。',
+    trap:'負指數不是把答案加負號；例如 2⁻¹ = 1/2。'
+  },
+  zero:{
+    name:'零指數',
+    formula:P('a','0')+' = 1（a ≠ 0）',
+    tip:'非零數的零次方是 1。',
+    cue:'點一下非零底數，把整塊收成 1。',
+    trap:'零指數的結果是 1，不是 0；此規則不適用於 0⁰。'
+  },
+  convert:{
+    name:'指數與對數互化',
+    formula:P('a','b')+' = N ⇔ '+L('a','N')+' = b',
+    tip:'a > 0，a ≠ 1，N > 0。底數不變，指數與真數對應。',
+    cue:'固定底數，把原來的指數移到等號外，冪的結果放進真數位置。',
+    trap:'底數必須保持不變；原來的指數是對數的值。'
+  },
+  logsum:{
+    name:'對數加法合併',
+    formula:L('a','M')+' + '+L('a','N')+' = '+L('a','MN'),
+    tip:'a > 0，a ≠ 1，M、N > 0。',
+    cue:'把兩個真數放進同一個括號，中間放乘號。',
+    trap:'對數相加是把真數相乘；logₐ(M+N) 不能拆成兩個對數相加。'
+  },
+  logdiff:{
+    name:'對數減法合併',
+    formula:L('a','M')+' − '+L('a','N')+' = '+L('a',F('M','N')),
+    tip:'a > 0，a ≠ 1，M、N > 0。被減的真數在分母。',
+    cue:'左邊真數放上方，被減真數放下方。',
+    trap:'對數相減對應真數相除，不是直接相減。'
+  },
+  logpower:{
+    name:'對數的冪次提取',
+    formula:L('a',P('M','r'))+' = r '+L('a','M'),
+    tip:'a > 0，a ≠ 1，M > 0；可反向把係數送進指數。',
+    cue:'把真數右上角的指數搬到 log 前方。',
+    trap:'係數是移到真數的指數位置，不是直接乘真數。'
+  },
+  inverse:{
+    name:'指數與對數相消',
+    formula:P('a',L('a','M'))+' = M；'+L('a',P('a','r'))+' = r',
+    tip:'a > 0，a ≠ 1，M > 0。先確認兩個底數相同。',
+    cue:'配對相同底數，留下被包住的真數或指數。',
+    trap:'必須先確認底數相同，不能看到 log 就直接去掉。'
+  },
+  change:{
+    name:'換底公式',
+    formula:L('a','b')+' = '+F(L('c','b'),L('c','a')),
+    tip:'a、c > 0 且不等於 1，b > 0。真數在上，原底數在下。',
+    cue:'把真數往分子放，把原底數往分母放。',
+    trap:'換底後是「真數在上、原底數在下」；分子分母不可倒置。'
+  },
+  cancel:{
+    name:'約去非零公因子',
+    formula:F('u','v')+' × '+F('w','u')+' = '+F('w','v')+
+      '（u、v ≠ 0）',
+    tip:'只能約去分子與分母中的相同非零因子。',
+    cue:'將相同因子的卡片拖到一起；或依序點選兩張。',
+    trap:'只能約掉相同非零因子，不能跨加減號把項直接約掉。'
+  },
+  expand:{
+    name:'平方展開／分配律',
+    formula:P('(u+v)','2')+' = '+P('u','2')+' + 2uv + '+P('v','2'),
+    tip:'平方展開要保留交叉項；乘法分配到括號中的每一項。',
+    cue:'依序指向兩個平方，再把中間的交叉項補回。',
+    trap:'(u+v)² 不等於 u²+v²，中間還有 2uv。'
+  },
+  number:{
+    name:'算術與同類項整理',
+    formula:'先乘除，後加減；分數先通分。',
+    tip:'確認結構已經化簡，再計算數值或合併同類項。',
+    cue:'由左到右指讀，每完成一塊，再收合下一塊。',
+    trap:'先檢查負號、運算次序與分母；相加時分母不能直接相加。'
+  }
+};
+
+/* ---------- 題庫資料結構 ---------- */
+
+const S=(name,rule,frame,ans,after,hint,extra=[])=>({
+  name,rule,frame,ans:ans.map(String),
+  after,hint,extra:extra.map(String)
+});
+
+const C=(frame,items,pair,after)=>({
+  name:'配對並約去公因子',
+  rule:'cancel',
+  frame,items,pair,after,
+  hint:'拖動一個因子到另一個相同因子；也可依序點選。只在乘除結構中約分。'
+});
+
+const Q=(id,title,expr,cond,steps,ans,labels,source)=>({
+  id,title,expr,cond,steps,ans:ans.map(String),labels,source
+});
+
+/* ---------- 六階段、22 題 ---------- */
+
+const units=[
+{
+  name:'根式變成冪',
+  sub:'由內向外處理',
+  source:'講義題型 1',
+  tasks:[
+    Q(
+      'r1','根指數放哪裡？',
+      R(P('m','2'),3),
+      'm > 0；寫成 mᵏ，求 k。',
+      [
+        S(
+          '把根式改寫成分數指數','root',
+          P('m',F('{0}','{1}')),
+          ['2','3'],P('m','2/3'),
+          '原來的冪是 2，根指數是 3。',
+          ['1','6']
+        )
+      ],
+      ['2/3'],['指數 k'],'題型 1 第 4(1) 題'
+    ),
+
+    Q(
+      'r2','把兩個根式合在一起',
+      R('a')+' × '+R('a',3),
+      'a > 0；寫成 aᵏ，求 k。',
+      [
+        S(
+          '先統一成指數形式','root',
+          P('a','{0}')+' × '+P('a','{1}'),
+          ['1/2','1/3'],
+          P('a','1/2')+' × '+P('a','1/3'),
+          '平方根對應 1/2 次方；立方根對應 1/3 次方。',
+          ['2','3']
+        ),
+        S(
+          '同底數相乘，把指數合攏','product',
+          P('a','{0} + {1}'),
+          ['1/2','1/3'],
+          P('a','1/2 + 1/3'),
+          '底數不動，只把兩個指數相加。',
+          ['1/6','5/6']
+        ),
+        S(
+          '通分再相加','number',
+          P('a','{0}'),['5/6'],P('a','5/6'),
+          '1/2 = 3/6，1/3 = 2/6。',
+          ['2/5','1/6']
+        )
+      ],
+      ['5/6'],['指數 k'],'題型 1 第 4(3) 題'
+    ),
+
+    Q(
+      'r3','一層一層拆根號',
+      R('a '+R('a')),
+      'a > 0；寫成 aᵏ，求 k。',
+      [
+        S(
+          '先處理最裡層','root',
+          R('a × '+P('a','{0}')),
+          ['1/2'],R('a × '+P('a','1/2')),
+          '外層根號先保留。',
+          ['2','1/4']
+        ),
+        S(
+          '合併根號裡的同底數冪','product',
+          R(P('a','{0}')),
+          ['3/2'],R(P('a','3/2')),
+          'a = a¹，裡面的指數是 1 + 1/2。',
+          ['1/2','2']
+        ),
+        S(
+          '外層平方根也是一次乘方','power',
+          P('a','{0} × {1}'),
+          ['3/2','1/2'],P('a','3/2 × 1/2'),
+          '把外層 1/2 次方乘進原指數。',
+          ['2','3']
+        ),
+        S(
+          '收合為一個指數','number',
+          P('a','{0}'),['3/4'],P('a','3/4'),
+          '計算 (3/2)×(1/2)。',
+          ['3','2']
+        )
+      ],
+      ['3/4'],['指數 k'],'題型 1 第 3 題'
+    ),
+
+    Q(
+      'r4','根式在分母',
+      F('1',R('a '+R('a',3),4)),
+      'a > 0；寫成 aᵏ，求 k。',
+      [
+        S(
+          '先整理最裡層','root',
+          F('1',R('a × '+P('a','{0}'),4)),
+          ['1/3'],F('1',R('a × '+P('a','1/3'),4)),
+          '立方根改寫成 1/3 次方。',
+          ['3','1/4']
+        ),
+        S(
+          '合併根號裡的指數','product',
+          F('1',R(P('a','{0}'),4)),
+          ['4/3'],F('1',R(P('a','4/3'),4)),
+          '計算 1 + 1/3。',
+          ['1/3','3/4']
+        ),
+        S(
+          '處理四次方根','power',
+          F('1',P('a','{0}')),
+          ['1/3'],F('1',P('a','1/3')),
+          '(4/3)×(1/4) = 1/3。',
+          ['4/3','3']
+        ),
+        S(
+          '把倒數寫成負指數','reciprocal',
+          P('a','{0}'),['-1/3'],P('a','−1/3'),
+          '底數不變，倒數改成負指數。',
+          ['1/3','-3']
+        )
+      ],
+      ['-1/3'],['指數 k'],'題型 1 第 1 題'
+    )
+  ]
+},
+{
+  name:'指數合併與求值',
+  sub:'先辨乘除，再算指數',
+  source:'講義題型 2',
+  tasks:[
+    Q(
+      'e1','相乘與相除分開做',
+      F(P('2','3')+' × '+P('2','2'),P('2','4')),
+      '求原式的值。',
+      [
+        S(
+          '合併分子','product',
+          F(P('2','{0}'),P('2','4')),
+          ['5'],F(P('2','5'),P('2','4')),
+          '分子是同底數冪相乘：3 + 2。',
+          ['6','1']
+        ),
+        S(
+          '分子指數減分母指數','quotient',
+          P('2','{0}'),['1'],P('2','1'),
+          '指數 5 − 4。',
+          ['9','-1']
+        ),
+        S(
+          '計算冪的值','number',
+          '{0}',['2'],'2',
+          '2 的 1 次方是 2。',
+          ['1','0']
+        )
+      ],
+      ['2'],['原式的值'],'題型 2 同型拆步題'
+    ),
+
+    Q(
+      'e2','負指數與分數底數',
+      P('('+F('16','9')+')','−1/2'),
+      '求原式的值。',
+      [
+        S(
+          '先用負指數取倒數','reciprocal',
+          P('('+F('{0}','{1}')+')','1/2'),
+          ['9','16'],P('('+F('9','16')+')','1/2'),
+          '翻轉底數的分子與分母，指數改為正。',
+          ['-9','-16']
+        ),
+        S(
+          '平方根分別作用於分子分母','root',
+          F('{0}','{1}'),['3','4'],F('3','4'),
+          '取正的平方根：√9 與 √16。',
+          ['-3','-4']
+        )
+      ],
+      ['3/4'],['原式的值'],'題型 2 第 3 題拆分'
+    ),
+
+    Q(
+      'e3','先化簡，再代入',
+      F(
+        '4 '+P('a','1/2')+P('a','2/3')+
+        P('b','1/2')+P('b','5/3'),
+        P('a','1/3')+P('a','1/2')+
+        P('b','7/6')+P('b','5/4')
+      ),
+      'a = 27，b = 16；分別合併 a、b 的指數後求值。',
+      [
+        S(
+          '把同底數指數分別合併','quotient',
+          '4 '+P('a','{0}')+P('b','{1}'),
+          ['1/3','-1/4'],
+          '4 '+P('a','1/3')+P('b','−1/4'),
+          'a：1/2+2/3−1/3−1/2；b：1/2+5/3−7/6−5/4。',
+          ['1/4','-1/3']
+        ),
+        S(
+          '代入正數求各塊的值','reciprocal',
+          '4 × {0} × {1}',
+          ['3','1/2'],
+          '4 × 3 × '+F('1','2'),
+          '27 的立方根是 3；16 的 −1/4 次方是 1/2。',
+          ['2','-2']
+        ),
+        S(
+          '完成數值運算','number',
+          '{0}',['6'],'6',
+          '先把 4 與 1/2 相乘，再乘 3。',
+          ['12','24']
+        )
+      ],
+      ['6'],['原式的值'],'題型 2 第 5(2) 題的指數形式'
+    ),
+
+    Q(
+      'e4','平方時別漏交叉項',
+      P('x','1/2')+' + '+P('x','−1/2')+' = 3',
+      'x > 0；求 x + x⁻¹。',
+      [
+        S(
+          '兩邊平方，展開交叉項','expand',
+          'x + '+P('x','−1')+' + {0} = {1}',
+          ['2','9'],
+          'x + '+P('x','−1')+' + 2 = 9',
+          '交叉項是 2×x^(1/2)×x^(−1/2) = 2。',
+          ['0','6']
+        ),
+        S(
+          '移項求目標式','number',
+          'x + '+P('x','−1')+' = {0}',
+          ['7'],'x + '+P('x','−1')+' = 7',
+          '從兩邊同時減去 2。',
+          ['9','11']
+        )
+      ],
+      ['7'],['x + x⁻¹ 的值'],'題型 2 第 4(2) 題'
+    )
+  ]
+},
+{
+  name:'指數與對數互化',
+  sub:'底數固定，辨認角色',
+  source:'講義題型 5',
+  tasks:[
+    Q(
+      'c1','從指數式走到對數式',
+      P('5','3')+' = 125',
+      '改寫成 logₐ N = b，依序填 a、N、b。',
+      [
+        S(
+          '固定底數，交換角色','convert',
+          L('{0}','{1}')+' = {2}',
+          ['5','125','3'],
+          L('5','125')+' = 3',
+          '原底數 5 保持，結果 125 是真數，指數 3 是對數值。',
+          ['1/5','25']
+        )
+      ],
+      ['5','125','3'],
+      ['底數 a','真數 N','對數值 b'],
+      '題型 5 第 4(1) 題'
+    ),
+
+    Q(
+      'c2','底數是分數也一樣',
+      L('1/2','8')+' = −3',
+      '改寫成 aᵇ = N，依序填 a、b、N。',
+      [
+        S(
+          '把對數值搬回指數位置','convert',
+          P('({0})','{1}')+' = {2}',
+          ['1/2','-3','8'],
+          P('(1/2)','−3')+' = 8',
+          '底數 1/2 保持，對數值 −3 變成指數。',
+          ['3','1/8']
+        )
+      ],
+      ['1/2','-3','8'],
+      ['底數 a','指數 b','結果 N'],
+      '題型 5 第 4(3) 題，已校正解析'
+    ),
+
+    Q(
+      'c3','互化後求未知數',
+      P('81','−3/4')+' = x',
+      'x > 0；先改寫成對數式，再求 x。',
+      [
+        S(
+          '先確認底數與對數值','convert',
+          L('{0}','x')+' = {1}',
+          ['81','-3/4'],
+          L('81','x')+' = −3/4',
+          '固定底數 81，指數 −3/4 到等號右側。',
+          ['3/4','4']
+        ),
+        S(
+          '回到指數式，先寫成同底數','power',
+          'x = '+P('3','{0}'),
+          ['-3'],'x = '+P('3','−3'),
+          '81 = 3⁴，因此指數是 4×(−3/4)。',
+          ['3','-4']
+        ),
+        S(
+          '用倒數求值','reciprocal',
+          'x = {0}',['1/27'],'x = '+F('1','27'),
+          '3⁻³ = 1/(3³)。',
+          ['-27','27']
+        )
+      ],
+      ['1/27'],['x 的值'],'題型 5 第 3(3) 題延伸'
+    )
+  ]
+},
+{
+  name:'對數拆開與合併',
+  sub:'加變乘，減變除',
+  source:'講義題型 6',
+  tasks:[
+    Q(
+      'l1','把兩個常用對數合併',
+      'lg 2 + lg 5',
+      'lg 表示以 10 為底的對數。',
+      [
+        S(
+          '同底數對數相加，真數相乘','logsum',
+          'lg ({0} × {1})',
+          ['2','5'],'lg (2 × 5)',
+          '把兩個真數放進同一個括號。',
+          ['7','10']
+        ),
+        S(
+          '從定義求對數值','inverse',
+          '{0}',['1'],'1',
+          '2×5 = 10，而 10¹ = 10。',
+          ['0','10']
+        )
+      ],
+      ['1'],['原式的值'],'題型 6 第 5(2) 題'
+    ),
+
+    Q(
+      'l2','把係數送回指數',
+      '2 '+L('2','3')+' + '+L('2',F('8','9')),
+      '求原式的值；所有真數皆為正。',
+      [
+        S(
+          '把對數前的係數送入冪次','logpower',
+          L('2',P('3','{0}'))+' + '+L('2',F('8','9')),
+          ['2'],
+          L('2','9')+' + '+L('2',F('8','9')),
+          '2 log₂3 = log₂(3²)，不是 log₂6。',
+          ['6','1/2']
+        ),
+        S(
+          '合併為一個對數','logsum',
+          L('2','{0}'),['8'],L('2','8'),
+          '真數相乘：9×(8/9)。',
+          ['17/9','1']
+        ),
+        S(
+          '用指數形式讀出結果','inverse',
+          '{0}',['3'],'3',
+          '2 的幾次方等於 8？',
+          ['4','8']
+        )
+      ],
+      ['3'],['原式的值'],'題型 6 同型改編'
+    ),
+
+    Q(
+      'l3','先把真數統一底數',
+      L('3',P('9','2')+' × 27'),
+      '求原式的值。',
+      [
+        S(
+          '把真數改寫成 3 的冪','power',
+          L('3',P('3','{0}')+' × '+P('3','{1}')),
+          ['4','3'],
+          L('3',P('3','4')+' × '+P('3','3')),
+          '9² = (3²)²；27 = 3³。',
+          ['2','6']
+        ),
+        S(
+          '合併同底數冪','product',
+          L('3',P('3','{0}')),
+          ['7'],L('3',P('3','7')),
+          '真數裡是相乘，指數 4 + 3。',
+          ['12','1']
+        ),
+        S(
+          '對數與指數相消','inverse',
+          '{0}',['7'],'7',
+          'log₃(3⁷) 讀作「3 的幾次方是 3⁷」。',
+          ['3','21']
+        )
+      ],
+      ['7'],['原式的值'],'題型 6 第 5(1) 題'
+    ),
+
+    Q(
+      'l4','分塊處理對數與冪',
+      'lg 2 + lg 50 − '+P('2',L('2','3')),
+      'lg 以 10 為底。',
+      [
+        S(
+          '合併相加的對數','logsum',
+          'lg {0} − '+P('2',L('2','3')),
+          ['100'],
+          'lg 100 − '+P('2',L('2','3')),
+          '真數相乘：2×50。',
+          ['52','25']
+        ),
+        S(
+          '分別消去相同底數的指數與對數','inverse',
+          '{0} − {1}',
+          ['2','3'],'2 − 3',
+          'lg100 = 2；2^(log₂3) = 3。',
+          ['100','1']
+        ),
+        S(
+          '完成減法','number',
+          '{0}',['-1'],'−1',
+          '2 − 3。',
+          ['1','5']
+        )
+      ],
+      ['-1'],['原式的值'],'題型 6 第 1 題'
+    )
+  ]
+},
+{
+  name:'換底與約分',
+  sub:'真數在上，底數在下',
+  source:'講義題型 7',
+  tasks:[
+    Q(
+      'b1','換成容易計算的底數',
+      L('8','32'),
+      '換成以 2 為底，再求值。',
+      [
+        S(
+          '真數進分子，原底數進分母','change',
+          F(L('2','{0}'),L('2','{1}')),
+          ['32','8'],
+          F(L('2','32'),L('2','8')),
+          '兩個新底數都取 2。',
+          ['2','3']
+        ),
+        S(
+          '分別計算分子、分母','inverse',
+          F('{0}','{1}'),
+          ['5','3'],F('5','3'),
+          '32 = 2⁵；8 = 2³。',
+          ['8','32']
+        )
+      ],
+      ['5/3'],['原式的值'],'題型 7 第 2 題的核心'
+    ),
+
+    Q(
+      'b2','讓公因子看得見',
+      L('2','3')+' × '+L('3','8'),
+      '先換成常用對數；lg 2、lg 3 均不為 0。',
+      [
+        S(
+          '統一換成以 10 為底','change',
+          F('lg {0}','lg {1}')+' × '+F('lg {2}','lg {3}'),
+          ['3','2','8','3'],
+          F('lg 3','lg 2')+' × '+F('lg 8','lg 3'),
+          '每一個對數都遵守真數在上、原底數在下。',
+          ['1','4']
+        ),
+        C(
+          F('{0}','{1}')+' × '+F('{2}','{3}'),
+          [
+            ['lg 3','top'],
+            ['lg 2','bottom'],
+            ['lg 8','top'],
+            ['lg 3','bottom']
+          ],
+          [0,3],
+          F('lg 8','lg 2')
+        ),
+        S(
+          '再讀回同底數對數','inverse',
+          '{0}',['3'],'3',
+          '剩下 log₂8；2³ = 8。',
+          ['8','1/3']
+        )
+      ],
+      ['3'],['原式的值'],'題型 7 連乘約分的同型拆步題'
+    ),
+
+    Q(
+      'b3','底數本身也是冪',
+      L('9','8')+' × '+L('4','3'),
+      '換成以 2 為底；log₂3 ≠ 0。',
+      [
+        S(
+          '換底並提取冪次','change',
+          F('{0}','{1} '+L('2','3'))+
+          ' × '+F(L('2','3'),'{2}'),
+          ['3','2','2'],
+          F('3','2 '+L('2','3'))+
+          ' × '+F(L('2','3'),'2'),
+          'log₂8 = 3；log₂9 = 2log₂3；log₂4 = 2。',
+          ['4','9']
+        ),
+        C(
+          F('3','2 × {0}')+' × '+F('{1}','2'),
+          [
+            [L('2','3'),'bottom'],
+            [L('2','3'),'top']
+          ],
+          [0,1],
+          F('3','4')
+        )
+      ],
+      ['3/4'],['原式的值'],'題型 7 第 3 題拆分'
+    ),
+
+    Q(
+      'b4','用已知對數表示未知式',
+      L('30','18'),
+      '已知 lg 2 = a，lg 3 = b；填最簡分子與分母。',
+      [
+        S(
+          '換成已知的常用對數','change',
+          F('lg {0}','lg {1}'),
+          ['18','30'],F('lg 18','lg 30'),
+          '換底後真數 18 在上，原底數 30 在下。',
+          ['2','3']
+        ),
+        S(
+          '拆開乘積，再代入 a、b','logsum',
+          F('{0}','{1}'),
+          ['a+2b','b+1'],F('a + 2b','b + 1'),
+          '18 = 2×3²；30 = 3×10。',
+          ['2a+b','b-1']
+        )
+      ],
+      ['a+2b','b+1'],
+      ['最簡分子（用 a、b）','最簡分母（用 b）'],
+      '題型 7 第 1 題'
+    )
+  ]
+},
+{
+  name:'綜合分步化簡',
+  sub:'分塊、化簡、再合流',
+  source:'講義題型 2、6、7',
+  tasks:[
+    Q(
+      'm1','三塊各自處理',
+      P('0.125','1/3')+' + '+
+      L('9','8')+' × '+L('4','3')+' + lg 0.01',
+      '求原式的值；先冪、再對數乘積、最後加減。',
+      [
+        S(
+          '先算立方根','root',
+          '{0} + '+L('9','8')+' × '+L('4','3')+' + lg 0.01',
+          ['1/2'],
+          F('1','2')+' + '+
+          L('9','8')+' × '+L('4','3')+' + lg 0.01',
+          '0.125 = 1/8，其立方根是 1/2。',
+          ['1/8','3/8']
+        ),
+        S(
+          '對數乘積用換底化簡','change',
+          F('1','2')+' + {0} + lg 0.01',
+          ['3/4'],
+          F('1','2')+' + '+F('3','4')+' + lg 0.01',
+          '換成底數 2，得到 3/(2log₂3) × log₂3/2。',
+          ['4/3','1']
+        ),
+        S(
+          '讀出小數的對數','inverse',
+          F('1','2')+' + '+F('3','4')+' + ({0})',
+          ['-2'],
+          F('1','2')+' + '+F('3','4')+' − 2',
+          '0.01 = 10⁻²。',
+          ['2','-100']
+        ),
+        S(
+          '通分完成加減','number',
+          '{0}',['-3/4'],'−'+F('3','4'),
+          '寫成四分之一的倍數：2/4 + 3/4 − 8/4。',
+          ['3/4','-1/4']
+        )
+      ],
+      ['-3/4'],['原式的值'],'題型 7 第 3 題'
+    ),
+
+    Q(
+      'm2','零指數與根式混合',
+      P('(−1.8)','0')+' + '+
+      P('(3/2)','−2')+' × '+R(P('(27/8)','2'),3)+
+      ' − '+F('1',R('0.01'))+' + '+R(P('9','3')),
+      '求原式的值。',
+      [
+        S(
+          '非零數的零次方先收成 1','zero',
+          '{0} + '+P('(3/2)','−2')+
+          ' × '+P('(27/8)','2/3')+
+          ' − '+F('1',R('0.01'))+' + '+R(P('9','3')),
+          ['1'],
+          '1 + '+P('(3/2)','−2')+
+          ' × '+P('(27/8)','2/3')+
+          ' − '+F('1',R('0.01'))+' + '+R(P('9','3')),
+          '(−1.8) 不為 0；立方根也可寫成 1/3 次方。',
+          ['0','-1']
+        ),
+        S(
+          '先化簡相乘的兩塊','power',
+          '1 + {0} × {1} − '+
+          F('1',R('0.01'))+' + '+R(P('9','3')),
+          ['4/9','9/4'],
+          '1 + '+F('4','9')+' × '+F('9','4')+
+          ' − '+F('1',R('0.01'))+' + '+R(P('9','3')),
+          '(3/2)⁻² = 4/9；27/8 = (3/2)³。',
+          ['-4/9','27/4']
+        ),
+        S(
+          '處理剩下兩個根式','root',
+          '1 + 1 − {0} + {1}',
+          ['10','27'],
+          '1 + 1 − 10 + 27',
+          '√0.01 = 0.1；1/0.1 = 10；√(9³) = 27。',
+          ['100','9']
+        ),
+        S(
+          '最後才合併加減','number',
+          '{0}',['19'],'19',
+          '1 + 1 − 10 + 27。',
+          ['17','39']
+        )
+      ],
+      ['19'],['原式的值'],'題型 2 第 5(1) 題'
+    ),
+
+    Q(
+      'm3','對數相減與冪次混合',
+      '2 '+L('3','2')+' − '+L('3',F('32','9'))+
+      ' + '+L('3','8')+' − '+P('5','2'+L('5','3')),
+      '求原式的值；注意被減的整個對數。',
+      [
+        S(
+          '把前方係數移入真數的冪次','logpower',
+          L('3','{0}')+' − '+L('3',F('32','9'))+
+          ' + '+L('3','8')+' − '+P('5',L('5','{1}')),
+          ['4','9'],
+          L('3','4')+' − '+L('3',F('32','9'))+
+          ' + '+L('3','8')+' − '+P('5',L('5','9')),
+          '2log₃2 = log₃4；2log₅3 = log₅9。',
+          ['6','25']
+        ),
+        S(
+          '先合併相減的對數','logdiff',
+          L('3','{0}')+' + '+L('3','8')+
+          ' − '+P('5',L('5','9')),
+          ['9/8'],
+          L('3',F('9','8'))+' + '+L('3','8')+
+          ' − '+P('5',L('5','9')),
+          '4 ÷ (32/9) = 9/8。',
+          ['-28/9','8/9']
+        ),
+        S(
+          '再合併相加的對數','logsum',
+          L('3','{0}')+' − '+P('5',L('5','9')),
+          ['9'],
+          L('3','9')+' − '+P('5',L('5','9')),
+          '(9/8)×8 = 9。',
+          ['17/8','1']
+        ),
+        S(
+          '消去指數與對數','inverse',
+          '{0} − {1}',
+          ['2','9'],'2 − 9',
+          'log₃9 = 2；5^(log₅9) = 9。',
+          ['3','5']
+        ),
+        S(
+          '完成最後一步','number',
+          '{0}',['-7'],'−7',
+          '2 − 9。',
+          ['7','11']
+        )
+      ],
+      ['-7'],['原式的值'],'題型 6 第 4(2) 題'
+    )
+  ]
+}
+];
+
+/* ---------- 精確且有限的答案解析 ---------- */
+/* 只接受數字、a、b、四則運算、括號；不執行輸入程式碼。 */
+const fractionChars={'½':'1/2','⅓':'1/3','⅔':'2/3','¼':'1/4','¾':'3/4',
+  '⅕':'1/5','⅖':'2/5','⅗':'3/5','⅘':'4/5','⅙':'1/6','⅚':'5/6',
+  '⅛':'1/8','⅜':'3/8','⅝':'5/8','⅞':'7/8'};
+
+function norm(value){
+  let s=String(value).normalize('NFC')
+    .replace(/[０-９Ａ-Ｚａ-ｚ＋－＊／（）．]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xfee0))
+    .replace(/[−–]/g,'-').replace(/[⁄／]/g,'/')
+    .replace(/[×·]/g,'*').replace(/÷/g,'/').trim().toLowerCase();
+  if(fractionChars[s])s=fractionChars[s];
+  else if(s[0]==='-'&&fractionChars[s.slice(1)])s='-'+fractionChars[s.slice(1)];
+  // 保留上標的區別；也不把「1 9」靜默拼成 19。
+  if(/\d\s+\d/.test(s))throw new Error('數字之間不可插入空白。');
+  return s.replace(/\s+/g,'');
+}
+
+function rational(n,d=1n){
+  if(d===0n)throw new Error('分母不可為 0。');
+  if(d<0n){n=-n;d=-d;}
+  let a=n<0n?-n:n,b=d;
+  while(b){const t=a%b;a=b;b=t;}
+  n/=a;d/=a;
+  if(n.toString().length>96||d.toString().length>96)throw new Error('數字過大，請先化簡。');
+  return [n,d];
+}
+const addR=(x,y)=>rational(x[0]*y[1]+y[0]*x[1],x[1]*y[1]);
+const mulR=(x,y)=>rational(x[0]*y[0],x[1]*y[1]);
+const divR=(x,y)=>rational(x[0]*y[1],x[1]*y[0]);
+const negR=x=>[-x[0],x[1]];
+const zeroR=()=>[0n,1n];
+const constant=x=>[x,zeroR(),zeroR()];
+const hasVariable=x=>x[1][0]!==0n||x[2][0]!==0n;
+
+function parseAnswer(value){
+  if(typeof value!=='string'||value.length>120)throw new Error('答案過長。');
+  const s=norm(value);
+  if(!s||/[^0-9ab.+*/()\-]/.test(s)){
+    throw new Error('請使用數字、a、b、+、-、*、/ 與括號；上標和冪次符號不支援。');
+  }
+  const tokens=[];
+  for(let p=0;p<s.length;){
+    const match=/^(?:\d+(?:\.\d*)?|\.\d+|[ab()+*/-])/.exec(s.slice(p));
+    if(!match)throw new Error('請檢查數字與小數點的寫法。');
+    tokens.push(match[0]);p+=match[0].length;
+  }
+  if(tokens.length>100)throw new Error('算式過長，請先化簡。');
+  let i=0,depth=0;
+  function primary(){
+    if(++depth>24)throw new Error('括號層數過多。');
+    const t=tokens[i++];let result;
+    if(t==='('){result=sum();if(tokens[i++]!==')')throw new Error('括號未配對。');}
+    else if(t==='a'||t==='b'){
+      result=constant(zeroR());result[t==='a'?1:2]=[1n,1n];
+    }else if(t&&/^(?:\d+(?:\.\d*)?|\.\d+)$/.test(t)){
+      const parts=t.split('.'),decimals=(parts[1]||'').length;
+      result=constant(rational(BigInt((parts[0]||'0')+(parts[1]||'')),10n**BigInt(decimals)));
+    }else throw new Error('請檢查運算符號與括號。');
+    depth--;return result;
+  }
+  function unary(){
+    let negative=false;
+    while(tokens[i]==='+'||tokens[i]==='-'){if(tokens[i++]==='-')negative=!negative;}
+    const result=primary();return negative?result.map(negR):result;
+  }
+  function product(){
+    let result=unary();
+    while(i<tokens.length){
+      const t=tokens[i],implicit=t==='a'||t==='b'||t==='(';
+      if(t!=='*'&&t!=='/'&&!implicit)break;
+      if(!implicit)i++;
+      const right=unary();
+      if(t==='/'){
+        if(hasVariable(right))throw new Error('分母請填數字；分子與分母依欄位分開作答。');
+        result=result.map(x=>divR(x,right[0]));
+      }else{
+        if(hasVariable(result)&&hasVariable(right))throw new Error('字母式請先化簡為一次式。');
+        result=hasVariable(right)?right.map(x=>mulR(x,result[0])):result.map(x=>mulR(x,right[0]));
+      }
+    }
+    return result;
+  }
+  function sum(){
+    let result=product();
+    while(tokens[i]==='+'||tokens[i]==='-'){
+      const negative=tokens[i++]==='-',right=product();
+      result=result.map((x,k)=>addR(x,negative?negR(right[k]):right[k]));
+    }
+    return result;
+  }
+  const result=sum();
+  if(i!==tokens.length)throw new Error('請補上運算符號或檢查括號。');
+  return result;
+}
+
+function numeric(value){
+  try{const p=parseAnswer(String(value));return hasVariable(p)?NaN:Number(p[0][0])/Number(p[0][1]);}
+  catch(_){return NaN;}
+}
+
+function matches(value,answer){
+  try{
+    const a=parseAnswer(String(value)),b=parseAnswer(String(answer));
+    return a.every((x,i)=>x[0]===b[i][0]&&x[1]===b[i][1]);
+  }catch(_){return false;}
+}
+
+/* ---------- UI ---------- */
+
+const $=id=>document.getElementById(id);
+
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({
+  '&':'&amp;',
+  '<':'&lt;',
+  '>':'&gt;',
+  '"':'&quot;',
+  "'":'&#39;'
+}[c]));
+
+const all=units.flatMap(u=>u.tasks);
+const valid=new Set(all.map(q=>q.id));
+const KEY='step-lab-v2';
+const LEGACY_KEY='step-lab-v1';
+const MODES=['guide','practice','test'];
+const emptySaved=()=>({schema:2,done:[],passed:[],wrong:[],unit:0,task:0,mode:'guide',attempt:null});
+
+function sanitizeSaved(raw,strict=false){
+  if(!raw||typeof raw!=='object'||Array.isArray(raw))throw new Error('紀錄格式不正確。');
+  if(raw.schema!==undefined&&![1,2].includes(raw.schema))throw new Error('此備份版本尚不支援。');
+  const clean=emptySaved();
+  for(const key of ['done','passed','wrong']){
+    if(strict&&(!Array.isArray(raw[key])||raw[key].some(x=>typeof x!=='string'||!valid.has(x)))){
+      throw new Error('備份中的題目紀錄不正確。');
+    }
+    clean[key]=Array.isArray(raw[key])?[...new Set(raw[key].filter(x=>valid.has(x)))]:[];
+  }
+  clean.done=[...new Set([...clean.done,...clean.passed])];
+  if(Number.isInteger(raw.unit)&&raw.unit>=0&&raw.unit<units.length)clean.unit=raw.unit;
+  else if(strict)throw new Error('備份中的學習階段不正確。');
+  if(Number.isInteger(raw.task)&&raw.task>=0&&raw.task<units[clean.unit].tasks.length)clean.task=raw.task;
+  else if(strict)throw new Error('備份中的題目位置不正確。');
+  if(MODES.includes(raw.mode))clean.mode=raw.mode;
+  else if(strict)throw new Error('備份中的練習模式不正確。');
+  // 只保留白名單欄位；題目與化簡軌跡一律由內建題庫重建。
+  if(raw.attempt&&typeof raw.attempt==='object'){
+    const a=raw.attempt;
+    clean.attempt={taskId:a.taskId,mode:a.mode,step:a.step,
+      values:Array.isArray(a.values)?a.values.map(v=>typeof v==='string'?v.slice(0,120):null):[],
+      accepted:a.accepted===true,complete:a.complete===true,
+      hints:a.hints,mistakes:a.mistakes,revealed:a.revealed===true,
+      chosenRule:typeof a.chosenRule==='string'?a.chosenRule:'',
+      cancelled:a.cancelled===true,reviewing:a.reviewing===true,
+      answers:Array.isArray(a.answers)?a.answers.map(v=>typeof v==='string'?v.slice(0,60):''):[],
+      bank:Array.isArray(a.bank)?a.bank.filter(v=>typeof v==='string').slice(0,30):[]};
+  }
+  return clean;
+}
+
+let saved=emptySaved(),canSave=true,lastSerialized='',loadNotice='';
+try{
+  const stored=localStorage.getItem(KEY),legacy=stored===null?localStorage.getItem(LEGACY_KEY):null;
+  const raw=stored||legacy;
+  if(raw){
+    try{saved=sanitizeSaved(JSON.parse(raw));}
+    catch(_){loadNotice='原有紀錄無法讀取，已開啟新的練習；可從備份匯入。';}
+  }
+  if(legacy)loadNotice='已沿用舊版完成與錯題紀錄。';
+}catch(_){canSave=false;loadNotice='瀏覽器目前無法儲存進度；仍可練習並匯出紀錄。';}
+
+let u=saved.unit,qindex=saved.task,mode=saved.mode;
+let step=0,values=[],selected=null,accepted=false,complete=false,ledger=[];
+let hints=0,mistakes=0,revealed=false,chosenRule='',bank=[],ruleOptions=[];
+let factorFirst=null,cancelled=false,reviewing=false,testAnswers=[];
+
+
+const question=()=>units[u].tasks[qindex];
+const current=()=>question().steps[step];
+
+const shuffle=a=>{
+  a=a.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+};
+
+function captureAttempt(){
+  return {taskId:question().id,mode,step,values:values.slice(),accepted,complete,
+    hints,mistakes,revealed,chosenRule,cancelled,reviewing,
+    answers:testAnswers.slice(),bank:bank.slice()};
+}
+
+function persist(){
+  saved.unit=u;saved.task=qindex;saved.mode=mode;saved.schema=2;
+  saved.attempt=captureAttempt();
+  const serialized=JSON.stringify(saved);
+  try{
+    if(serialized!==lastSerialized){localStorage.setItem(KEY,serialized);lastSerialized=serialized;}
+    canSave=true;
+  }catch(_){canSave=false;lastSerialized='';}
+  $('storage').textContent=canSave
+    ?'當題進度與完成紀錄已自動儲存。'
+    :'目前無法自動儲存；離開前可匯出紀錄。';
+}
+
+function restoreAttempt(a){
+  if(!a||a.taskId!==question().id||a.mode!==mode)return false;
+  if(!Number.isInteger(a.step)||a.step<0||a.step>=question().steps.length)return false;
+  if(![a.hints,a.mistakes].every(n=>Number.isSafeInteger(n)&&n>=0&&n<=100000))return false;
+  step=a.step;prepareStep();
+  const s=current(),allowed=s.ans?[...new Set([...s.ans,...s.extra])]:[];
+  if(s.ans&&Array.isArray(a.values)&&a.values.length===s.ans.length){
+    values=a.values.map(v=>allowed.includes(v)?v:null);
+  }
+  if(a.bank.length===allowed.length&&new Set(a.bank).size===allowed.length&&a.bank.every(v=>allowed.includes(v))){bank=a.bank.slice();}
+  hints=a.hints;mistakes=a.mistakes;revealed=a.revealed;
+  if(revealed&&hints===0)hints=1;
+  chosenRule=ruleOptions.includes(a.chosenRule)?a.chosenRule:'';
+  cancelled=Boolean(s.items&&a.cancelled);
+  reviewing=a.reviewing;
+  testAnswers=question().ans.map((_,i)=>a.answers[i]||'');
+  const stepCorrect=s.items?cancelled:values.every((v,i)=>v!==null&&matches(v,s.ans[i]));
+  accepted=mode!=='test'&&a.accepted&&stepCorrect&&(mode!=='practice'||chosenRule===s.rule);
+  complete=a.complete&&saved.done.includes(question().id)&&(
+    mode==='test'?testAnswers.every((v,i)=>matches(v,question().ans[i])):
+      accepted&&step===question().steps.length-1
+  );
+  ledger=mode==='test'
+    ?(complete?[{name:'獨立計算結果',after:question().steps.at(-1).after}]:[])
+    :question().steps.slice(0,step+(accepted?1:0)).map(s=>({name:rules[s.rule].name,after:s.after}));
+  return true;
+}
+
+function focusWork(){
+  const target=$('stepHeading')||$('work');
+  target.focus({preventScroll:true});
+  const box=target.getBoundingClientRect();
+  if(box.top<0||box.bottom>window.innerHeight)target.scrollIntoView({block:'start',behavior:'auto'});
+}
+
+/* 數學語意獨立於視覺排版；不隱藏互動按鈕。 */
+function speakMath(node){
+  if(node.nodeType===3)return node.textContent;
+  if(node.nodeType!==1)return '';
+  const children=Array.from(node.children);
+  if(node.classList.contains('pow'))return '（'+speakMath(children[0])+'）的（'+speakMath(children[1])+'）次方';
+  if(node.classList.contains('frac'))return '分數，分子（'+speakMath(children[0])+'），分母（'+speakMath(children[1])+'），分數結束';
+  if(node.classList.contains('root')){
+    const n=node.querySelector(':scope > sup');
+    return (n?n.textContent:'2')+' 次方根，根號內（'+speakMath(node.querySelector(':scope > .radicand'))+'），根號結束';
+  }
+  if(node.classList.contains('log'))return '以（'+speakMath(node.querySelector(':scope > sub'))+'）為底、真數為（'+speakMath(node.querySelector(':scope > .logarg'))+'）的對數';
+  return Array.from(node.childNodes).map(speakMath).join('');
+}
+
+function mathText(html){
+  const template=document.createElement('template');template.innerHTML=html;
+  return Array.from(template.content.childNodes).map(speakMath).join('')
+    .replace(/lg\s*/g,'以 10 為底的對數 ').replace(/×/g,' 乘以 ')
+    .replace(/÷/g,' 除以 ').replace(/−/g,' 減 ').replace(/=/g,' 等於 ').trim();
+}
+
+function enhanceMath(root){
+  root.querySelectorAll('.math').forEach(el=>{
+    if(el.dataset.accessibleMath||el.querySelector('button,input,select,textarea'))return;
+    el.setAttribute('role','math');el.setAttribute('aria-label',mathText(el.innerHTML));
+    const visual=document.createElement('span');visual.setAttribute('aria-hidden','true');
+    while(el.firstChild)visual.appendChild(el.firstChild);
+    el.appendChild(visual);el.dataset.accessibleMath='true';
+    if(el.scrollWidth>el.clientWidth){el.tabIndex=0;el.setAttribute('aria-description','可左右捲動查看完整算式。');}
+  });
+}
+
+
+function renderRail(){
+  const done=saved.done.length;
+  const passed=saved.passed.length;
+
+  $('units').innerHTML=units.map((unit,i)=>{
+    const n=unit.tasks.filter(t=>saved.done.includes(t.id)).length;
+
+    return '<button class="unit '+(i===u?'active':'')+
+      '" data-unit="'+i+'"'+
+      (i===u?' aria-current="step"':'')+'>'+
+      '<span class="num">0'+(i+1)+'</span>'+
+      '<span><strong>'+unit.name+'</strong>'+
+      '<small>'+n+' / '+unit.tasks.length+
+      ' 題完成</small></span></button>';
+  }).join('');
+
+  const nav=$('units');
+  const active=nav.querySelector('.active');
+
+  if(nav.scrollWidth>nav.clientWidth&&active){
+    nav.scrollLeft+=
+      active.getBoundingClientRect().left-
+      nav.getBoundingClientRect().left-
+      (nav.clientWidth-active.clientWidth)/2;
+  }
+
+  $('progressText').textContent=
+    '完成 '+done+'/'+all.length+' · 曾獨立過關 '+passed;
+
+  $('progress').max=all.length;
+  $('progress').value=done;
+  $('review').textContent='回練錯題（'+saved.wrong.length+'）';
+  $('review').disabled=!saved.wrong.length;
+}
+
+function prepareStep(){
+  const s=current();
+
+  values=s&&s.ans?s.ans.map(()=>null):[];
+  accepted=false;
+  revealed=false;
+  chosenRule='';
+  selected=null;
+  factorFirst=null;
+  cancelled=false;
+
+  bank=s&&s.ans
+    ?shuffle([...new Set([...s.ans,...s.extra])])
+    :[];
+
+  const distractors={
+    root:['reciprocal','product'],
+    product:['power','quotient'],
+    quotient:['product','power'],
+    power:['product','quotient'],
+    reciprocal:['zero','logdiff'],
+    zero:['product','quotient'],
+    convert:['change','logsum'],
+    logsum:['product','logdiff'],
+    logdiff:['logsum','quotient'],
+    logpower:['product','logsum'],
+    inverse:['change','logsum'],
+    change:['logsum','quotient'],
+    cancel:['logsum','convert'],
+    expand:['power','product'],
+    number:['change','zero']
+  };
+
+  ruleOptions=s
+    ?shuffle([s.rule,...distractors[s.rule]])
+    :[];
+}
+
+function start(newMode=mode,options={}){
+  mode=MODES.includes(newMode)?newMode:'guide';
+  step=0;ledger=[];hints=0;mistakes=0;complete=false;testAnswers=[];
+  prepareStep();
+  const resumed=options.restore?restoreAttempt(options.restore):false;
+  $('history').open=false;
+  renderRail();renderHead();renderWork();renderTrace();persist();
+  $('sessionNotice').textContent=options.message||(
+    resumed?'已接續「'+question().title+'」'+(complete?'的完成畫面。':
+      mode==='test'?'的獨立檢核。':'第 '+(step+1)+' 步。')+
+      ' 提示 '+hints+' 次，答錯 '+mistakes+' 次。':'');
+  if(options.focus!==false)focusWork();
+  return resumed;
+}
+
+function renderHead(){
+  $('unitMeta').textContent=
+    'STAGE 0'+(u+1)+' / '+units[u].sub;
+
+  $('unitTitle').textContent=units[u].name;
+
+  $('tasks').innerHTML=units[u].tasks.map((t,i)=>
+    '<option value="'+i+'"'+
+    (i===qindex?' selected':'')+'>'+
+    String(i+1).padStart(2,'0')+' · '+t.title+
+    (
+      saved.passed.includes(t.id)
+        ?' ✓ 獨立過關'
+        :saved.done.includes(t.id)?' ✓ 已練習':''
+    )+
+    '</option>'
+  ).join('');
+
+  document.querySelectorAll('[data-mode]').forEach(b=>{
+    b.classList.toggle('active',b.dataset.mode===mode);
+    b.setAttribute(
+      'aria-pressed',
+      String(b.dataset.mode===mode)
+    );
+  });
+}
+
+function lawHTML(s){
+  const r=rules[s.rule];
+
+  return '<div class="law">'+
+    '<div class="math">'+r.formula+'</div>'+
+    '<p>'+s.hint+'</p>'+
+    '<details class="tiny"><summary>適用條件</summary>'+
+    r.tip+'</details></div>';
+}
+
+function problemHTML(){
+  const t=question();
+
+  return '<div class="tiny">'+
+    (reviewing?'錯題回練 · ':'')+
+    t.source+'</div>'+
+    '<div class="problem">'+
+    '<div class="math">'+t.expr+'</div>'+
+    '<div class="condition">'+t.cond+'</div></div>';
+}
+
+function renderWork(){
+  clearDrag();
+  let html=problemHTML();
+
+  /* 完成畫面 */
+  if(complete){
+    const clean=mode==='test'&&!hints&&!mistakes;
+
+    html+='<div class="complete">'+
+      '<div class="checkmark" aria-hidden="true">✓</div>'+
+      '<div class="eyebrow">'+
+      (clean?'獨立檢核通過':'本次練習完成')+
+      '</div><h3 id="stepHeading" tabindex="-1">'+
+      (
+        clean
+          ?'你已自行完成這一題。'
+          :'把剛才的規則，再說一次。'
+      )+
+      '</h3><div class="math">'+
+      question().steps[question().steps.length-1].after+
+      '</div><p>'+
+      (
+        mode==='test'&&!clean
+          ?'本次使用提示或修正過答案，記為練習完成。重新檢核可確認能否獨立完成。'
+          :'打開下方「化簡軌跡」，看每一步怎樣銜接。'
+      )+
+      '</p>'+
+      '<label class="tiny" for="reflection">'+
+      '口述或寫下：我先＿＿，因為＿＿。（不儲存、不評分）'+
+      '</label>'+
+      '<textarea id="reflection" class="reflection" '+
+      'placeholder="試著說出適用條件，例如：底數相同而且相乘，所以指數相加。">'+
+      '</textarea>'+
+      '<div class="actions"><button id="again">'+
+      (
+        mode==='guide'
+          ?'撤掉提示，再做一次'
+          :mode==='practice'
+            ?'獨立檢核這一題'
+            :'重新檢核'
+      )+
+      '</button><button class="primary" id="nextTask">'+
+      (
+        reviewing&&saved.wrong.length
+          ?'下一道回練題'
+          :'下一題 →'
+      )+
+      '</button></div></div>';
+
+    $('work').innerHTML=html;
+    enhanceMath($('work'));
+    return;
+  }
+
+  /* 獨立檢核 */
+  if(mode==='test'){
+    html+='<h3 class="stepname" id="stepHeading" tabindex="-1">獨立化簡，寫下最後結果</h3>'+
+      '<p class="cue" id="answerHelp">'+
+      '可以在紙上分步計算，再填入答案。'+
+      '分數請填精確值（如 3/4）；可用括號與四則運算。字母式限 a、b 的一次式；不支援上標。'+
+      '</p><form id="answerForm">'+
+      '<div class="finalinputs">'+
+      question().ans.map((a,i)=>
+        '<div class="field">'+
+        '<label for="answer'+i+'">'+
+        question().labels[i]+'</label>'+
+        '<input id="answer'+i+'" name="answer'+i+'" '+
+        'autocomplete="off" spellcheck="false" maxlength="60" '+
+        'inputmode="text" aria-describedby="answerHelp" aria-invalid="false" required></div>'
+      ).join('')+
+      '</div><div id="testHint"></div>'+
+      '<div class="actions">'+
+      '<button class="primary" type="submit">檢查答案</button>'+
+      '<button id="hint" type="button">給我一點提示</button>'+
+      '</div></form>'+
+      '<div class="feedback" id="feedback" '+
+      'role="status" aria-live="polite"></div>';
+
+    $('work').innerHTML=html;
+
+    question().ans.forEach((_,i)=>{$('answer'+i).value=testAnswers[i]||'';});
+    if(revealed)showTestHint();
+    enhanceMath($('work'));
+    $('answerForm').addEventListener('submit',e=>{
+      e.preventDefault();
+      check();
+    });
+    return;
+  }
+
+  /* 跟著做與自己做 */
+  const s=current();
+  const r=rules[s.rule];
+
+  html+='<div class="stepbar">'+
+    '<span class="tiny">第 '+(step+1)+' / '+
+    question().steps.length+' 步</span>'+
+    '<div class="dots" aria-hidden="true">'+
+    question().steps.map((_,i)=>
+      '<span class="dot '+
+      (i<step?'done':i===step?'now':'')+
+      '"></span>'
+    ).join('')+
+    '</div></div>'+
+    '<h3 class="stepname" id="stepHeading" tabindex="-1">'+s.name+'</h3>'+
+    '<p class="cue">'+
+    (
+      s.items
+        ?r.cue
+        :mode==='guide'
+          ?r.cue
+          :'先選擇本步法則，再填入下一行式子。'
+    )+
+    '</p>';
+
+  if(mode==='practice'){
+    html+='<div class="rulepicker">'+
+      '<label for="rule">這一步用哪個法則？</label>'+
+      '<select id="rule">'+
+      '<option value="">選擇法則</option>'+
+      ruleOptions.map(k=>
+        '<option value="'+k+'">'+rules[k].name+'</option>'
+      ).join('')+
+      '</select></div>';
+  }
+
+  html+='<div id="lawArea">'+
+    (mode==='guide'?lawHTML(s):'')+
+    '</div>'+
+    '<div class="board"><div class="math" id="boardMath">'+
+    s.frame.replace(/\{(\d+)\}/g,(_,n)=>{
+      if(s.items){
+        return '<button class="factor" data-factor="'+n+'" '+
+          'aria-label="'+
+          esc(mathText(s.items[n][0]))+'，'+
+          (s.items[n][1]==='top'?'分子':'分母')+
+          '因子">'+s.items[n][0]+'</button>';
+      }
+
+      return '<button class="slot" data-slot="'+n+'" '+
+        'aria-label="填入空格 '+(+n+1)+'">'+
+        String(+n+1).padStart(2,'0')+'</button>';
+    })+
+    '</div></div>';
+
+  if(!s.items){
+    html+='<div class="tiny">'+
+      '拖曳卡片到空格；或先點卡片，再點空格。卡片可重複使用。'+
+      '</div><div class="bank">'+
+      bank.map((v,i)=>
+        '<button class="tile" data-tile="'+i+
+        '" aria-pressed="false">'+esc(v)+'</button>'
+      ).join('')+
+      '</div>';
+  }
+
+  html+='<div class="actions">'+
+    '<button class="primary" id="check">檢查這一步</button>'+
+    '<button id="hint">給我提示</button>'+
+    '<button id="clear">重排這一步</button>'+
+    '</div>'+
+    '<div class="feedback" id="feedback" '+
+    'role="status" aria-live="polite"></div>'+
+    '<div id="advance" class="actions"></div>';
+
+  $('work').innerHTML=html;
+
+  if($('rule')){
+    $('rule').value=chosenRule;
+    $('rule').addEventListener('change',e=>{
+      chosenRule=e.target.value;persist();
+    });
+  }
+  if(revealed&&mode!=='guide')$('lawArea').innerHTML=lawHTML(s);
+  if(s.items)paintFactors();
+  else values.forEach((v,i)=>{if(v!==null)paintSlot(i,v);});
+  if(accepted)showAccepted();
+  enhanceMath($('work'));
+}
+
+function feedback(text,kind=''){
+  const el=$('feedback');
+  if(el){
+    el.className='feedback '+kind;
+    el.textContent=text;
+  }
+}
+
+function renderTrace(){
+  $('traceCount').textContent=
+    ledger.length?'（'+ledger.length+' 步）':'';
+
+  $('trace').innerHTML=
+    '<div class="traceitem"><span class="tiny">原題</span>'+
+    '<div class="math">'+question().expr+'</div></div>'+
+    ledger.map((x,i)=>
+      '<div class="traceitem"><span class="tiny">'+
+      (i+1)+' · '+x.name+'</span>'+
+      '<div class="math">'+x.after+'</div></div>'
+    ).join('');
+  enhanceMath($('trace'));
+}
+
+function error(message){
+  mistakes++;
+  const id=question().id;
+
+  if(!saved.wrong.includes(id)){
+    saved.wrong.push(id);
+  }
+
+  renderRail();persist();
+  feedback(message,'bad');
+}
+
+function showTestHint(){
+  const directions=question().steps.map(s=>rules[s.rule].name)
+    .filter((v,i,a)=>!i||v!==a[i-1]).join(' → ');
+  $('testHint').innerHTML='<div class="law"><b>拆步方向</b><p>'+directions+
+    '</p><p>仍不確定時，可切換「跟著做」。本次將記為有提示練習。</p></div>';
+}
+
+function hint(){
+  hints++;revealed=true;
+  if(mode==='test'){
+    showTestHint();feedback('可以慢慢算；本次不計入獨立過關。');
+  }else{
+    $('lawArea').innerHTML=lawHTML(current());
+    enhanceMath($('lawArea'));feedback(current().hint);
+  }
+  persist();
+}
+
+/* ---------- 卡片及因子操作 ---------- */
+
+function chooseTile(i){
+  if(accepted)return;
+
+  selected=bank[i];
+
+  document.querySelectorAll('.tile').forEach((b,k)=>{
+    b.classList.toggle('selected',k===i);
+    b.setAttribute('aria-pressed',String(k===i));
+  });
+
+  feedback('已選「'+selected+'」，請點要放入的空格。');
+}
+
+function paintSlot(i,value){
+  const slot=$('boardMath').querySelector('[data-slot="'+i+'"]');
+  if(!slot)return;
+  slot.textContent=value;slot.classList.add('filled');
+  slot.setAttribute('aria-label','空格 '+(i+1)+'：'+value);
+}
+
+function place(i,value){
+  if(accepted||mode==='test'||complete||!Number.isInteger(i)||i<0||i>=values.length||!bank.includes(value))return;
+  values[i]=value;paintSlot(i,value);persist();
+  feedback('已放入。填完後檢查這一步。');
+}
+
+function factorPair(a,b){
+  if(accepted||cancelled)return;
+
+  const s=current();
+
+  if(a===b){
+    factorFirst=null;
+    paintFactors();
+    return;
+  }
+
+  const legal=
+    s.pair.includes(a)&&
+    s.pair.includes(b)&&
+    s.items[a][1]!==s.items[b][1];
+
+  if(legal){
+    cancelled=true;
+    factorFirst=null;
+    paintFactors();persist();
+    feedback(
+      '相同非零因子配對完成，檢查這一步確認結果。',
+      'good'
+    );
+  }else{
+    factorFirst=null;
+    paintFactors();
+    error(rules.cancel.trap);
+  }
+}
+
+function paintFactors(){
+  document.querySelectorAll('.factor').forEach(b=>{
+    const i=Number(b.dataset.factor);
+
+    b.classList.toggle('selected',i===factorFirst);
+    b.classList.toggle(
+      'cancelled',
+      cancelled&&current().pair.includes(i)
+    );
+
+    b.setAttribute(
+      'aria-pressed',
+      String(
+        i===factorFirst||
+        cancelled&&current().pair.includes(i)
+      )
+    );
+  });
+}
+
+/* ---------- 檢查與進度 ---------- */
+
+function check(){
+  if(complete||accepted)return;
+
+  const t=question();
+
+  if(mode==='test'){
+    const inputs=t.ans.map((_,i)=>
+      $('answer'+i).value.trim()
+    );
+
+    if(inputs.some(v=>!v)){
+      feedback('請填完每一個答案欄位。');
+      return;
+    }
+
+    testAnswers=inputs;
+    let formatIssue='';
+    inputs.forEach((v,i)=>{
+      try{parseAnswer(v);$('answer'+i).setAttribute('aria-invalid','false');}
+      catch(e){if(!formatIssue)formatIssue=t.labels[i]+'：'+e.message;$('answer'+i).setAttribute('aria-invalid','true');}
+    });
+    if(formatIssue){persist();feedback(formatIssue,'bad');return;}
+    inputs.forEach((v,i)=>$('answer'+i).setAttribute('aria-invalid',String(!matches(v,t.ans[i]))));
+    if(!inputs.every((v,i)=>matches(v,t.ans[i]))){
+      error(
+        '還需要調整。請檢查底數、負號與運算次序；'+
+        '分數請保留精確值，字母式依各欄位分開填入。'
+      );
+      return;
+    }
+
+    ledger=[{
+      name:'獨立計算結果',
+      after:t.steps[t.steps.length-1].after
+    }];
+
+    finish();
+    return;
+  }
+
+  const s=current();
+
+  if(mode==='practice'&&!chosenRule){
+    feedback('先選擇本步使用的法則。');
+    return;
+  }
+
+  if(mode==='practice'&&chosenRule!==s.rule){
+    error(
+      '這個法則不適合目前標出的這一步。'+
+      rules[s.rule].trap
+    );
+    return;
+  }
+
+  if(s.items&&!cancelled){
+    feedback('請先配對分子與分母中的相同非零因子。');
+    return;
+  }
+
+  if(!s.items&&values.some(v=>v===null)){
+    feedback('請把每個空格填好，再檢查。');
+    return;
+  }
+
+  if(!s.items&&!values.every((v,i)=>matches(v,s.ans[i]))){
+    error(rules[s.rule].trap+' '+s.hint);
+    return;
+  }
+
+  accepted=true;
+
+  ledger.push({
+    name:rules[s.rule].name,
+    after:s.after
+  });
+
+  renderTrace();
+  feedback('這一步成立。看看結果，再往下一步。','good');
+
+  showAccepted();persist();
+  $('nextStep').focus({preventScroll:true});
+}
+
+function showAccepted(){
+  const t=question(),s=current();
+  $('advance').innerHTML='<div class="math" style="width:100%">'+s.after+'</div>'+
+    '<button class="primary" id="nextStep">'+
+    (step===t.steps.length-1?'完成本題 ✓':'下一步 →')+'</button>';
+  $('work').querySelectorAll('.slot,.tile,.factor,#rule,#check,#clear,#hint').forEach(el=>el.disabled=true);
+  enhanceMath($('advance'));
+}
+
+
+function finish(){
+  complete=true;
+  const id=question().id;
+
+  if(!saved.done.includes(id)){
+    saved.done.push(id);
+  }
+
+  if(mode==='test'&&!hints&&!mistakes){
+    if(!saved.passed.includes(id)){
+      saved.passed.push(id);
+    }
+
+    saved.wrong=saved.wrong.filter(x=>x!==id);
+  }
+
+  renderRail();
+  renderHead();
+  renderWork();
+  renderTrace();persist();focusWork();
+}
+
+function nextStep(){
+  if(!accepted)return;
+
+  if(step===question().steps.length-1){
+    finish();
+    return;
+  }
+
+  step++;
+  prepareStep();
+  renderWork();persist();focusWork();
+}
+
+function locate(id){
+  for(let i=0;i<units.length;i++){
+    const j=units[i].tasks.findIndex(t=>t.id===id);
+    if(j>=0){
+      u=i;
+      qindex=j;
+      return;
+    }
+  }
+}
+
+function nextTask(){
+  if(reviewing&&saved.wrong.length){
+    const ids=saved.wrong;
+    const i=ids.indexOf(question().id);
+
+    locate(ids[(i+1)%ids.length]);
+    start('test');
+    return;
+  }
+
+  reviewing=false;
+  qindex++;
+
+  if(qindex>=units[u].tasks.length){
+    qindex=0;
+    u=(u+1)%units.length;
+  }
+
+  start(mode);
+}
+
+/* ---------- Pointer Events 拖曳 ---------- */
+/* 點選與鍵盤是同等功能的替代操作。 */
+
+let suppressClick=0;
+let drag=null;
+
+function clearDrag(){
+  const previous=drag;drag=null;
+  if(previous){
+    if(previous.ghost)previous.ghost.remove();
+    try{if(previous.el.hasPointerCapture(previous.id))previous.el.releasePointerCapture(previous.id);}catch(_){}
+  }
+  document.querySelectorAll('.over').forEach(x=>x.classList.remove('over'));
+}
+
+$('work').addEventListener('pointerdown',e=>{
+  const el=e.target.closest('.tile,.factor');
+
+  if(!el||el.disabled||accepted||e.button!==0||e.isPrimary===false||drag)return;
+
+  drag={
+    el,
+    id:e.pointerId,
+    x:e.clientX,
+    y:e.clientY,
+    moved:false,
+    type:el.classList.contains('tile')?'tile':'factor',
+    value:el.dataset.tile!==undefined
+      ?bank[Number(el.dataset.tile)]
+      :Number(el.dataset.factor)
+  };
+
+  el.setPointerCapture(e.pointerId);
+});
+
+$('work').addEventListener('pointermove',e=>{
+  if(!drag||drag.id!==e.pointerId)return;
+
+  if(
+    !drag.moved&&
+    Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<8
+  ){
+    return;
+  }
+
+  e.preventDefault();
+
+  if(!drag.moved){
+    drag.moved=true;
+    drag.ghost=drag.el.cloneNode(true);
+    drag.ghost.removeAttribute('id');
+    drag.ghost.classList.add('ghost');
+    drag.ghost.setAttribute('aria-hidden','true');
+    document.body.appendChild(drag.ghost);
+  }
+
+  drag.ghost.style.left=e.clientX+'px';
+  drag.ghost.style.top=e.clientY+'px';
+
+  document.querySelectorAll('.over').forEach(x=>{
+    x.classList.remove('over');
+  });
+
+  const target=document.elementFromPoint(e.clientX,e.clientY);
+
+  if(target){
+    const hit=target.closest(
+      drag.type==='tile'?'.slot':'.factor'
+    );
+    if(hit)hit.classList.add('over');
+  }
+});
+
+$('work').addEventListener('pointerup',e=>{
+  if(!drag||drag.id!==e.pointerId)return;
+
+  const d=drag;
+
+  if(d.moved){
+    e.preventDefault();
+    suppressClick=Date.now()+350;
+
+    const target=document.elementFromPoint(e.clientX,e.clientY);
+    const hit=target&&target.closest(
+      d.type==='tile'?'.slot':'.factor'
+    );
+
+    if(hit){
+      if(d.type==='tile'){
+        place(Number(hit.dataset.slot),d.value);
+      }else{
+        factorPair(d.value,Number(hit.dataset.factor));
+      }
+    }else{
+      feedback(
+        '請放到虛線空格或可配對的因子上；也可以用點選操作。'
+      );
+    }
+  }
+
+  clearDrag();
+});
+
+$('work').addEventListener('pointercancel',clearDrag);
+$('work').addEventListener('lostpointercapture',clearDrag);
+
+/* ---------- 點選、鍵盤與導覽 ---------- */
+
+$('work').addEventListener('click',e=>{
+  if(Date.now()<suppressClick)return;
+
+  const b=e.target.closest('button');
+  if(!b||b.disabled)return;
+
+  if(b.dataset.tile!==undefined){
+    chooseTile(Number(b.dataset.tile));
+    return;
+  }
+
+  if(b.dataset.slot!==undefined){
+    if(selected===null){
+      feedback('先點選一張卡片，再點這個空格。');
+    }else{
+      place(Number(b.dataset.slot),selected);
+    }
+    return;
+  }
+
+  if(b.dataset.factor!==undefined){
+    if(cancelled)return;
+
+    const i=Number(b.dataset.factor);
+
+    if(factorFirst===null){
+      factorFirst=i;
+      paintFactors();
+      feedback('再選分子或分母中可約去的相同因子。');
+    }else{
+      factorPair(factorFirst,i);
+    }
+    return;
+  }
+
+  if(b.id==='check')check();
+  if(b.id==='hint')hint();
+
+  if(b.id==='clear'){
+    prepareStep();
+    renderWork();persist();focusWork();
+  }
+
+  if(b.id==='nextStep')nextStep();
+
+  if(b.id==='again'){
+    start(mode==='guide'?'practice':'test');
+  }
+
+  if(b.id==='nextTask')nextTask();
+});
+
+$('units').addEventListener('click',e=>{
+  const b=e.target.closest('[data-unit]');
+
+  if(b){
+    reviewing=false;
+    u=Number(b.dataset.unit);
+    qindex=0;
+    start('guide');
+  }
+});
+
+$('tasks').addEventListener('change',e=>{
+  reviewing=false;
+  qindex=Number(e.target.value);
+  start();
+});
+
+document.querySelectorAll('[data-mode]').forEach(b=>{
+  b.addEventListener('click',()=>{
+    if(mode===b.dataset.mode)return;
+    start(b.dataset.mode);
+  });
+});
+
+$('review').addEventListener('click',()=>{
+  if(!saved.wrong.length)return;
+
+  reviewing=true;
+  locate(saved.wrong[0]);
+  start('test');
+});
+
+let resetArmed=false,resetTimer;
+function disarmReset(){resetArmed=false;clearTimeout(resetTimer);$('resetNote').textContent='';}
+
+$('reset').addEventListener('click',()=>{
+  if(!resetArmed){
+    resetArmed=true;
+    resetTimer=setTimeout(disarmReset,12000);
+    $('resetNote').textContent=
+      ' 請在 12 秒內再按一次，清除完成、錯題及當題進度。';
+    return;
+  }
+
+  saved=emptySaved();
+  clearTimeout(resetTimer);
+  try{localStorage.removeItem(LEGACY_KEY);}catch(_){}
+
+  u=0;
+  qindex=0;
+  reviewing=false;
+  resetArmed=false;
+  $('resetNote').textContent=' 已清除。';
+  start('guide');
+});
+
+/* ---------- 當題輸入與備份 ---------- */
+$('work').addEventListener('input',e=>{
+  if(mode!=='test'||complete||!/^answer\d+$/.test(e.target.id))return;
+  const index=Number(e.target.id.slice(6));
+  testAnswers[index]=e.target.value;
+  e.target.setAttribute('aria-invalid','false');persist();
+});
+
+let pendingImport=null,importSequence=0;
+function cancelImport(){
+  pendingImport=null;importSequence++;
+  $('importPreview').hidden=true;$('importFile').value='';
+}
+
+$('exportProgress').addEventListener('click',()=>{
+  disarmReset();persist();
+  const payload={app:'step-lab',version:2,exportedAt:new Date().toISOString(),data:saved};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json;charset=utf-8'});
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download='step-lab-progress-'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
+  $('backupStatus').textContent='已準備下載學習紀錄；請保留下載的 JSON 檔案。';
+});
+
+$('importProgress').addEventListener('click',()=>{
+  disarmReset();cancelImport();$('importFile').click();
+});
+
+$('importFile').addEventListener('change',async e=>{
+  const file=e.target.files[0],sequence=++importSequence;
+  if(!file)return;
+  try{
+    if(file.size>256*1024)throw new Error('備份檔案過大；請選擇由本頁匯出的 JSON 檔。');
+    const text=await file.text();
+    if(sequence!==importSequence)return;
+    const data=JSON.parse(text);
+    if(!data||data.app!=='step-lab'||data.version!==2)throw new Error('這不是支援的「一步一步」學習紀錄備份。');
+    pendingImport=sanitizeSaved(data.data,true);
+    $('importSummary').textContent='備份包含 '+pendingImport.done.length+' 題完成、'+
+      pendingImport.passed.length+' 題曾獨立過關、'+pendingImport.wrong.length+' 題待回練。';
+    $('backupStatus').textContent='請確認是否取代目前紀錄。';
+    $('importPreview').hidden=false;$('confirmImport').focus();
+  }catch(error){
+    if(sequence!==importSequence)return;
+    pendingImport=null;$('importPreview').hidden=true;
+    $('backupStatus').textContent=error instanceof SyntaxError?'檔案不是有效的 JSON，原有紀錄未變更。':error.message;
+  }finally{if(sequence===importSequence)$('importFile').value='';}
+});
+
+$('cancelImport').addEventListener('click',()=>{
+  cancelImport();$('backupStatus').textContent='已取消匯入，原有紀錄未變更。';$('importProgress').focus();
+});
+
+$('confirmImport').addEventListener('click',()=>{
+  if(!pendingImport)return;
+  const imported=pendingImport;cancelImport();disarmReset();
+  saved=imported;u=saved.unit;qindex=saved.task;reviewing=false;
+  const resumed=start(saved.mode,{restore:saved.attempt});
+  $('sessionNotice').textContent=resumed?'已匯入紀錄並接續備份進度。':'已匯入完成與錯題紀錄，從當題第一步開始。';
+  $('backupStatus').textContent='匯入完成。';
+});
+
+window.addEventListener('pagehide',()=>{clearDrag();persist();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){clearDrag();persist();}});
+
+/* ---------- 啟動 ---------- */
+try{
+  const attempt=saved.attempt;
+  $('app').hidden=false;
+  start(mode,{restore:attempt,focus:false,message:loadNotice});
+  $('bootMessage').hidden=true;
+}catch(e){
+  $('bootMessage').hidden=false;
+  $('bootMessage').textContent='頁面未能完整啟動，請確認 HTML 已完整下載並使用新版瀏覽器開啟。';
+  console.error(e);
+}
+
+
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"7939e04a4baf43c8b86a560f74aac60e","spa":2}' crossorigin="anonymous"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1c1c7799c54e46349cc23295b5e08299","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>
